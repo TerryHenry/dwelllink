@@ -49,7 +49,7 @@ here to download it.
 DwellLink is an independent tool built against the RUCKUS One API. It is
 **not a RUCKUS product** and is **not supported by RUCKUS**; RUCKUS and
 RUCKUS One are trademarks of their respective owner(s), and this project
-isn't published, endorsed, or affiliated with RUCKUS Networks, CommScope,
+isn't published, endorsed, or affiliated with RUCKUS Networks, Belden,
 or their affiliates. It is provided **"as is," with no guarantee or
 warranty of any kind, express or implied** — see the LICENSE file for the
 full warranty disclaimer.
