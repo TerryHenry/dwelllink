@@ -31,7 +31,11 @@ your OS will show a first-run warning — this is expected for an
 internally-distributed tool:
 
 - **macOS**: right-click (or Control-click) the app and choose **Open**,
-  then **Open** again in the dialog. You only need to do this once.
+  then **Open** again in the dialog. On newer macOS versions, if you
+  instead see *"Apple could not verify 'DwellLink' is free of malware..."*,
+  go to **System Settings → Privacy & Security**, find the **Open Anyway**
+  button next to the DwellLink warning near the bottom, click it, then try
+  opening the app again. You only need to do this once.
 - **Windows**: click **More info → Run anyway** on the SmartScreen prompt.
 
 ## Documentation
