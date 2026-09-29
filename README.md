@@ -37,3 +37,11 @@ DwellLink checks this repository's releases for newer versions from
 **Settings → Software Updates** (admin only). It never installs updates
 automatically — it tells you a newer version is available and links back
 here to download it.
+
+## License
+
+© 2026 Terry Henry. All rights reserved — see [LICENSE](LICENSE). DwellLink
+is an independent tool built against the RUCKUS One API; RUCKUS and RUCKUS
+One are trademarks of their respective owner(s), and this project isn't
+published, endorsed, or affiliated with RUCKUS Networks, CommScope, or
+their affiliates.
