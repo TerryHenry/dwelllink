@@ -18,9 +18,10 @@ code isn't published here.
 
 Grab the latest installer from the [Releases page](../../releases/latest):
 
-- **macOS (Apple Silicon / M1, M2, M3, M4)** — `DwellLink-*-arm64.dmg`
-- **macOS (Intel)** — `DwellLink-*.dmg` (no `arm64` in the name)
+- **macOS (Apple Silicon — M1, M2, M3, M4)** — `DwellLink-*-arm64.dmg`
 - **Windows** — `DwellLink Setup *.exe`
+
+Intel Macs aren't supported as of this release.
 
 The app isn't code-signed (no Apple Developer ID / Windows certificate), so
 your OS will show a first-run warning — this is expected for an
