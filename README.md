@@ -6,6 +6,9 @@ A desktop app for front desk staff and property managers to create and
 manage property units, residents, and Wi-Fi access in **RUCKUS One** —
 without touching the RUCKUS One admin console directly.
 
+<img width="1179" height="762" alt="image" src="https://github.com/user-attachments/assets/e47e7207-85a0-4bda-83df-2ce533880dc5" />
+
+
 > **Disclaimer:** DwellLink is **not a RUCKUS product** and is **not
 > supported by RUCKUS**. It is provided with **no guarantee or warranty of
 > any kind, express or implied**. See [License](#license) below.
