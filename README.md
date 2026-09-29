@@ -6,6 +6,10 @@ A desktop app for front desk staff and property managers to create and
 manage property units, residents, and Wi-Fi access in **RUCKUS One** —
 without touching the RUCKUS One admin console directly.
 
+> **Disclaimer:** DwellLink is **not a RUCKUS product** and is **not
+> supported by RUCKUS**. It is provided with **no guarantee or warranty of
+> any kind, express or implied**. See [License](#license) below.
+
 This repository hosts the **built app and documentation only** — it's how
 DwellLink is distributed and how the app checks for updates. The source
 code isn't published here.
@@ -40,8 +44,12 @@ here to download it.
 
 ## License
 
-© 2026 Terry Henry. All rights reserved — see [LICENSE](LICENSE). DwellLink
-is an independent tool built against the RUCKUS One API; RUCKUS and RUCKUS
-One are trademarks of their respective owner(s), and this project isn't
-published, endorsed, or affiliated with RUCKUS Networks, CommScope, or
-their affiliates.
+© 2026 Terry Henry. All rights reserved — see [LICENSE](LICENSE).
+
+DwellLink is an independent tool built against the RUCKUS One API. It is
+**not a RUCKUS product** and is **not supported by RUCKUS**; RUCKUS and
+RUCKUS One are trademarks of their respective owner(s), and this project
+isn't published, endorsed, or affiliated with RUCKUS Networks, CommScope,
+or their affiliates. It is provided **"as is," with no guarantee or
+warranty of any kind, express or implied** — see the LICENSE file for the
+full warranty disclaimer.
