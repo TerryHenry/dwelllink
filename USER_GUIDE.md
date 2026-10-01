@@ -15,8 +15,10 @@ day. For installation/build details for IT staff, see
 3. [First-time setup (admin)](#first-time-setup-admin)
 4. [Managing multiple properties (admin)](#managing-multiple-properties-admin)
 5. [Navigation and dark mode](#navigation-and-dark-mode)
+    - [Quick search](#quick-search)
 6. [Managing property units](#managing-property-units)
     - [Bulk actions](#bulk-actions)
+    - [Vacant units](#vacant-units)
 7. [Moving a unit out (turnover)](#moving-a-unit-out-turnover)
 8. [Importing units from a CSV file](#importing-units-from-a-csv-file)
 9. [Exporting units to a CSV file](#exporting-units-to-a-csv-file)
@@ -40,14 +42,29 @@ day. For installation/build details for IT staff, see
 ## Opening the app for the first time
 
 This app isn't distributed through the Mac App Store, so the first time you
-open it, macOS will likely warn that it's "from an unidentified developer."
+open it, macOS will warn you about it. Exactly what that warning looks like
+— and how to get past it — depends on your macOS version, since Apple has
+tightened this over recent releases. Try these in order:
 
 1. Copy **DwellLink.app** to your **Applications** folder (or open it
    straight from the installer `.dmg`).
-2. **Right-click** (or Control-click) the app icon and choose **Open**.
-3. Click **Open** again in the dialog that appears.
+2. **Right-click** (or Control-click) the app icon and choose **Open**,
+   then click **Open** again in the dialog that appears. On older macOS
+   versions this is all you need.
+3. If that doesn't work — or macOS instead says *"Apple could not verify
+   'DwellLink' is free of malware that may harm your Mac or compromise
+   your privacy"* — newer macOS versions need one extra step:
+   1. Try opening DwellLink once (you'll see the same blocking message —
+      dismiss it).
+   2. Open **System Settings → Privacy & Security**, scroll down to the
+      Security section. You should see a line like *"DwellLink" was
+      blocked to protect your Mac* with an **Open Anyway** button —
+      click it.
+   3. Try opening DwellLink again. A new confirmation dialog should
+      appear with an actual **Open Anyway** option this time — click it
+      and authenticate with your password/Touch ID if prompted.
 
-You only need to do this once — after that, it opens normally by
+You only need to do this once per Mac — after that, it opens normally by
 double-clicking like any other app.
 
 > If macOS says the app "is damaged and can't be opened," it usually means
@@ -136,14 +153,25 @@ resident's access is expiring within the next 7 days — a heads-up to check
 the Directory's [Expiring soon](#resident-directory) filter without having
 to click in first.
 
+### Quick search
+
+Click **Search** at the top of the sidebar (or press **Cmd+K** on Mac /
+**Ctrl+K** on Windows) from anywhere in the app to jump straight to a unit
+or a resident by name, email, phone number, or unit number — without
+switching tabs or hunting through a list first. Use the arrow keys and
+Enter to pick a result, or click one directly. Press **Esc** to close it
+without picking anything. It searches whichever property is currently
+active (or every property you have access to, if you've turned on "Search
+all properties" on the Directory tab).
+
 ---
 
 ## Managing property units
 
 The **Units** tab is the home screen — every unit and conference room in
 the building, with quick counts at the top (total, active, suspended,
-conference rooms), a search box, and filter chips to narrow the list to
-just units or just conference rooms.
+conference rooms, vacant), a search box, and filter chips to narrow the
+list to just units, just conference rooms, or just vacant units.
 
 The first time you sign in, this list is fetched live from RUCKUS One and
 can take a little while to populate — a spinner and "Loading units from
@@ -153,6 +181,12 @@ looking empty.
 - **+ Add Unit** — create a new residential unit. Fill in the unit
   name/number and the resident's name (required), plus email and phone
   (optional, used for Wi-Fi credential notifications and account contact).
+  Also optional: a PMS unit ID, and Wi-Fi details up front — VLAN,
+  description, and passphrase (leave the passphrase blank to set one later
+  from the unit's page instead), plus a guest VLAN/passphrase if this
+  property has guest Wi-Fi configured (safely ignored if it doesn't). Wi-Fi
+  details finish applying in the background a few seconds after the unit
+  itself is created.
 - **+ Add Conference Room** — same form, but the unit is created as a
   conference room instead of a residential unit. This can't be changed
   later, so pick the right button up front.
@@ -162,6 +196,11 @@ looking empty.
 - Conference rooms show a blue **Conference room** tag next to their name
   in the list, so they're easy to tell apart from residential units at a
   glance.
+- The list sorts by unit name alphabetically by default (newly added units
+  automatically land in the right spot, not just tacked on at the end).
+  Click any column header (**Unit**, **Status**, **ID**) to sort by that
+  column instead — click it again to reverse the order. An arrow next to
+  the header shows which column is active and which direction.
 
 ### Bulk actions
 
@@ -188,11 +227,24 @@ a bulk actions bar for everything currently checked:
   why so nothing silently goes missing from the batch.
 - **Suspend** / **Reactivate** — temporarily disable or re-enable every
   selected unit.
+- **Move out / Turnover** (admin only) — runs the same handoff described in
+  [Moving a unit out](#moving-a-unit-out-turnover) below, across every
+  selected unit at once — handy for a multi-unit turnover day instead of
+  doing each one from its own detail page.
 - **Delete** (admin only) — permanently deletes every selected unit. This
   cannot be undone in RUCKUS One.
 
 Each action runs across the whole selection and reports how many succeeded
 if any individual one failed, rather than stopping at the first problem.
+
+### Vacant units
+
+A unit shows a **Vacant** tag next to its name, and counts toward the
+**Vacant** stat at the top of the Units tab, once it's been moved out and
+no new resident has been assigned yet (see [Moving a unit
+out](#moving-a-unit-out-turnover)). Click the **Vacant** filter chip to see
+just those units — useful for a quick "what's actually empty right now"
+check across the property.
 
 ### On a unit's detail page
 
@@ -486,6 +538,11 @@ whether a newer build of the app is available and what version you're
 currently running. If one exists, **Download update** opens the download
 page — updates aren't installed automatically; download and run the new
 installer yourself, the same way you installed this one.
+
+The first time anyone signs in after installing a newer version, a **What's
+new** notice pops up automatically with that version's release notes — no
+need to go looking for them. It only shows once per version, for whichever
+staff account happens to sign in first after the upgrade.
 
 ---
 
