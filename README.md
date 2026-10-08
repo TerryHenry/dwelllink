@@ -17,6 +17,43 @@ This repository hosts the **built app and documentation only** — it's how
 DwellLink is distributed and how the app checks for updates. The source
 code isn't published here.
 
+## Features
+
+**Units and residents**
+- Add residential units and conference rooms, with optional VLAN,
+  description, passphrase and guest Wi-Fi set up front.
+- Bulk import from CSV (with a downloadable template) and export to CSV.
+- Sortable unit list with active, suspended, conference-room and vacant
+  counts, plus search and filters.
+- Bulk actions: resend access details, suspend, reactivate, move out, delete.
+- One-step move-out / turnover: revokes owner and guest Wi-Fi, removes
+  additional residents, and marks the unit Vacant.
+
+**Wi-Fi access**
+- Owner, guest and additional-resident passphrases, each with its own VLAN
+  and optional expiry date.
+- Printable or PDF move-in sheets with a Wi-Fi QR code, for a single
+  resident or a whole batch (one print job, one PDF, or separate PDFs).
+- Connected-device view, with the option to disconnect a device or revoke
+  an identity.
+- Resident portal link for each unit.
+
+**Visibility**
+- Resident Directory across properties, with search, filters, CSV export and
+  an "expiring soon" badge.
+- Quick search (Cmd/Ctrl+K) to jump to any unit or resident.
+- Audit log of every action, with CSV export.
+- "What's new" notice after an upgrade.
+
+**Built for shared front desks**
+- Multiple properties from one install, with a quick property switcher.
+- Admin and front-desk roles; front-desk accounts can be limited to
+  specific properties.
+- Auto sign-out after inactivity, encrypted API credentials, and
+  backup / restore of settings.
+- Custom app name, logo and colors; light and dark mode.
+- Update checks against this repository's releases.
+
 ## Download
 
 Grab the latest installer from the [Releases page](../../releases/latest):
