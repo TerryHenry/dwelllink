@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;" />
+<title>DwellLink</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<div id="setup-view" class="centered hidden">
+  <form id="setup-form" class="card">
+    <h1>Welcome to <span id="setup-brand-name">DwellLink</span></h1>
+    <p class="tagline">Resident Connectivity Management</p>
+    <p class="muted small">Powered by RUCKUS One</p>
+    <p class="muted">No staff accounts exist yet. Create the first property manager (admin) account to get started.</p>
+    <label>Username<input type="text" id="setup-username" required /></label>
+    <label>Password<input type="password" id="setup-password" minlength="8" required /></label>
+    <p id="setup-error" class="error hidden"></p>
+    <button type="submit">Create admin account</button>
+  </form>
+</div>
+
+<div id="login-view" class="centered hidden">
+  <form id="login-form" class="card">
+    <img id="login-logo" class="hidden" alt="" />
+    <h1 id="login-brand-name" class="hidden">DwellLink</h1>
+    <p class="tagline hidden">Resident Connectivity Management</p>
+    <p class="powered-by-badge hidden">Powered by RUCKUS One</p>
+    <p id="login-message" class="login-message hidden"></p>
+    <p class="muted">Sign in with your front desk / property manager account.</p>
+    <p id="login-info" class="muted small hidden"></p>
+    <label>Username<input type="text" id="login-username" autocomplete="username" required /></label>
+    <label>Password<input type="password" id="login-password" autocomplete="current-password" required /></label>
+    <p id="login-error" class="error hidden"></p>
+    <button type="submit">Sign in</button>
+  </form>
+</div>
+
+<div id="force-change-password-view" class="centered hidden">
+  <form id="force-change-password-form" class="card">
+    <h1>Choose a new password</h1>
+    <p class="muted">Your password was reset by an admin. Pick a new password to continue.</p>
+    <label>Temporary password<input type="password" id="fcp-current" autocomplete="current-password" required /></label>
+    <label>New password<input type="password" id="fcp-new" autocomplete="new-password" required minlength="8" /></label>
+    <p id="fcp-error" class="error hidden"></p>
+    <button type="submit">Set new password</button>
+  </form>
+</div>
+
+<div id="app-view" class="hidden">
+  <div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand"><img id="brand-logo" class="hidden" alt="" /><span id="brand-name">DwellLink</span></div>
+    <div id="current-venue-label" class="current-venue hidden"></div>
+    <select id="venue-switcher" class="current-venue-select hidden" title="Switch property"></select>
+    <button type="button" class="sidebar-search-btn" id="open-search-btn" title="Search units and residents">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3" stroke-linecap="round"/></svg>
+      <span>Search</span>
+      <kbd>&#8984;K</kbd>
+    </button>
+    <nav class="sidebar-nav">
+      <button class="tab-btn" data-tab="units">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 21V7l8-4 8 4v14" stroke-linejoin="round"/><path d="M9 21v-7h6v7" stroke-linejoin="round"/><path d="M9 11h.01M15 11h.01M9 8h.01M15 8h.01"/></svg>
+        <span>Units</span>
+      </button>
+      <button class="tab-btn" data-tab="directory">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3" stroke-linecap="round"/></svg>
+        <span>Directory</span>
+        <span id="directory-nav-badge" class="nav-badge hidden" title="Residents with access expiring within 7 days"></span>
+      </button>
+      <button class="tab-btn admin-only" data-tab="users">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3.2"/><path d="M2.5 20c0-3.6 2.9-6.2 6.5-6.2s6.5 2.6 6.5 6.2" stroke-linecap="round"/><path d="M16 4.3c1.6.4 2.8 1.9 2.8 3.6 0 1.8-1.2 3.2-2.8 3.6M18.5 14c2.4.5 4 2.6 4 5.3" stroke-linecap="round"/></svg>
+        <span>Staff</span>
+      </button>
+      <button class="tab-btn admin-only" data-tab="audit">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5Z" stroke-linejoin="round"/><path d="M14 3v5h5M9 13h6M9 17h6M9 9h2" stroke-linecap="round"/></svg>
+        <span>Audit Log</span>
+      </button>
+      <button class="tab-btn" data-tab="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 13.5a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.9 2.9l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.9-2.9l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.6-1H4a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.6-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.9-2.9l.1.1a1.7 1.7 0 0 0 1.9.3H10a1.7 1.7 0 0 0 1-1.6V4a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.9 2.9l-.1.1a1.7 1.7 0 0 0-.3 1.9V10c.1.7.6 1.3 1.6 1.4h.2a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.6 1.1z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Settings</span>
+      </button>
+      <button class="tab-btn" data-tab="help">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M9.3 9a2.7 2.7 0 1 1 3.8 2.5c-.9.4-1.6 1.1-1.6 2.1v.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 17.2h.01" stroke-linecap="round"/></svg>
+        <span>Help</span>
+      </button>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="theme-switch-row">
+        <span class="theme-switch-label" id="theme-switch-label">Light mode</span>
+        <button id="theme-toggle-btn" class="switch" type="button" role="switch" aria-checked="false" title="Toggle dark mode">
+          <span class="switch-knob"></span>
+        </button>
+      </div>
+      <div class="who">
+        <span id="who-username"></span>
+        <button id="logout-btn" class="link-btn">Sign out</button>
+      </div>
+    </div>
+  </aside>
+
+  <main>
+    <!-- UNITS TAB -->
+    <section id="tab-units" class="tab-panel">
+      <div class="panel-header">
+        <h2>Property Units</h2>
+      </div>
+
+      <div class="stat-cards">
+        <div class="stat-card">
+          <span class="stat-value" id="stat-total">—</span>
+          <span class="stat-label">Total</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" id="stat-active">—</span>
+          <span class="stat-label">Active</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" id="stat-suspended">—</span>
+          <span class="stat-label">Suspended</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" id="stat-rooms">—</span>
+          <span class="stat-label">Conference rooms</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" id="stat-vacant">—</span>
+          <span class="stat-label">Vacant</span>
+        </div>
+      </div>
+
+      <div class="panel-header">
+        <input id="unit-search" type="search" placeholder="Search by unit, resident name, email, or phone..." />
+        <div class="filter-chips" id="unit-filter-chips">
+          <button type="button" class="chip active" data-filter="all">All</button>
+          <button type="button" class="chip" data-filter="unit">Units</button>
+          <button type="button" class="chip" data-filter="room">Conference rooms</button>
+          <button type="button" class="chip" data-filter="vacant">Vacant</button>
+        </div>
+        <div class="spacer"></div>
+        <button id="add-unit-btn">+ Add Unit</button>
+        <button id="add-conference-room-btn" class="secondary">+ Add Conference Room</button>
+        <button id="import-csv-btn" class="secondary">Import CSV</button>
+        <button id="export-units-csv-btn" class="secondary">Export CSV</button>
+        <button id="refresh-units-btn" class="secondary">Refresh</button>
+      </div>
+      <div class="panel-header bulk-bar hidden" id="bulk-actions-bar">
+        <span id="bulk-selected-count" class="small"></span>
+        <div class="spacer"></div>
+        <button type="button" class="secondary" id="bulk-resend-btn">Resend access details</button>
+        <div class="dropdown" id="bulk-movein-dropdown">
+          <button type="button" class="secondary" id="bulk-movein-btn">Move-in sheets ▾</button>
+          <div class="dropdown-menu hidden" id="bulk-movein-menu">
+            <button type="button" class="dropdown-item" id="bulk-print-btn">Print</button>
+            <button type="button" class="dropdown-item" id="bulk-pdf-btn">Save as one PDF</button>
+            <button type="button" class="dropdown-item" id="bulk-pdf-individual-btn">Save as separate PDFs</button>
+          </div>
+        </div>
+        <button type="button" class="secondary" id="bulk-suspend-btn">Suspend</button>
+        <button type="button" class="secondary" id="bulk-reactivate-btn">Reactivate</button>
+        <button type="button" class="danger admin-only" id="bulk-move-out-btn">Move out / Turnover</button>
+        <button type="button" class="danger admin-only" id="bulk-delete-btn">Delete</button>
+        <button type="button" class="link-btn" id="bulk-clear-btn">Clear selection</button>
+      </div>
+      <p id="units-error" class="error hidden"></p>
+      <table class="data-table" id="units-table">
+        <thead><tr>
+          <th class="checkbox-col"><input type="checkbox" id="units-select-all" title="Select all" /></th>
+          <th class="sortable" data-sort="name">Unit<span class="sort-arrow"></span></th>
+          <th class="sortable" data-sort="status">Status<span class="sort-arrow"></span></th>
+          <th class="sortable" data-sort="id">ID<span class="sort-arrow"></span></th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+      <p id="units-empty" class="muted hidden">No units found yet. Click "Add Unit" to create the first one.</p>
+    </section>
+
+    <!-- DIRECTORY TAB (all roles) -->
+    <section id="tab-directory" class="tab-panel hidden">
+      <div class="panel-header">
+        <h2>Resident Directory</h2>
+      </div>
+      <p class="muted small">Every owner and Additional Resident across all units, in one place — find who's connected to Wi-Fi where, or see whose access is expiring soon, without opening each unit individually.</p>
+      <div class="panel-header">
+        <input id="directory-search" type="search" placeholder="Search by name, email, phone, unit, or description..." />
+        <div class="filter-chips" id="directory-filter-chips">
+          <button type="button" class="chip active" data-filter="all">All</button>
+          <button type="button" class="chip" data-filter="expiring">Expiring soon</button>
+          <button type="button" class="chip" data-filter="revoked">Revoked</button>
+        </div>
+        <div class="spacer"></div>
+        <button type="button" class="secondary" id="directory-export-btn">Export CSV</button>
+        <button type="button" class="secondary" id="directory-refresh-btn">Refresh</button>
+      </div>
+      <label class="checkbox-label admin-only" id="directory-all-properties-label">
+        <input type="checkbox" id="directory-all-properties-checkbox" />
+        Search all properties (slower — checks every property, not just the active one)
+      </label>
+      <p id="directory-error" class="error hidden"></p>
+      <table class="data-table small" id="directory-table">
+        <thead><tr><th>Name</th><th>Type</th><th>Property</th><th>Unit</th><th>Contact</th><th>Expires</th><th>Status</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <!-- UNIT DETAIL -->
+    <section id="unit-detail" class="tab-panel hidden">
+      <div class="panel-header">
+        <button class="link-btn" id="back-to-units">&larr; Back to units</button>
+      </div>
+      <h2 id="unit-detail-title">Unit <span id="unit-detail-status" class="status-pill"></span></h2>
+
+      <div class="card">
+        <h3>Details</h3>
+        <form id="unit-edit-form">
+          <div class="grid-2">
+            <label>Unit name / number<input type="text" id="edit-unit-name" /></label>
+            <label>Resident name<input type="text" id="edit-unit-resident-name" /></label>
+            <label>Resident email<input type="email" id="edit-unit-resident-email" /></label>
+            <label>Resident mobile phone<input type="tel" id="edit-unit-resident-phone" placeholder="e.g. (555) 123-4567" /></label>
+          </div>
+          <p id="edit-unit-readonly-fields" class="muted small"></p>
+          <label id="resident-portal-label" class="hidden">Resident portal link
+            <div class="row-actions">
+              <input type="text" id="resident-portal-url" readonly />
+              <button type="button" id="copy-portal-link-btn" class="secondary">Copy link</button>
+              <button type="button" id="open-portal-link-btn" class="secondary">Open</button>
+            </div>
+          </label>
+          <label class="hidden">Raw fields (JSON) — advanced / extra RUCKUS fields
+            <textarea id="edit-unit-json" rows="5" spellcheck="false"></textarea>
+          </label>
+          <div class="row-actions">
+            <button type="submit">Save changes</button>
+            <button type="button" id="resend-creds-btn" class="secondary">Resend access details</button>
+            <button type="button" id="suspend-unit-btn" class="secondary">Suspend unit</button>
+            <button type="button" id="move-out-btn" class="danger admin-only">Move out / Turnover</button>
+            <button type="button" id="delete-unit-btn" class="danger admin-only">Delete unit</button>
+          </div>
+        </form>
+        <p id="unit-detail-error" class="error hidden"></p>
+        <p id="unit-detail-ok" class="ok hidden"></p>
+        <p class="muted small">"Resend access details" re-sends the resident's Wi-Fi passphrase and portal link by email/SMS via RUCKUS One.</p>
+        <div id="unit-dpsk-rows"></div>
+      </div>
+
+      <div class="card">
+        <h3>Connected devices</h3>
+        <button id="refresh-clients-btn" class="secondary">Check status</button>
+        <table class="data-table small" id="clients-table">
+          <thead><tr><th>Client</th><th>SSID / AP</th><th>Resident</th><th></th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <h3>Additional Residents</h3>
+        <p class="muted small">For more than one Wi-Fi login per unit (roommates, etc.) — each gets their own identity in the building's Identity Group.</p>
+        <button id="add-identity-btn">+ Add Resident</button>
+        <p id="identities-error" class="error hidden"></p>
+
+        <div class="panel-header bulk-bar hidden" id="resident-bulk-actions-bar">
+          <span id="resident-bulk-selected-count" class="small"></span>
+          <div class="spacer"></div>
+          <button type="button" class="secondary" id="resident-bulk-passphrase-btn">New passphrase</button>
+          <button type="button" class="secondary" id="resident-bulk-revoke-btn">Revoke</button>
+          <button type="button" class="secondary" id="resident-bulk-unrevoke-btn">Unrevoke</button>
+          <button type="button" class="danger" id="resident-bulk-remove-btn">Remove</button>
+          <button type="button" class="link-btn" id="resident-bulk-clear-btn">Clear selection</button>
+        </div>
+
+        <form id="add-identity-form" class="hidden">
+          <label>Name *<input type="text" id="new-identity-name" required /></label>
+          <label>Email<input type="email" id="new-identity-email" /></label>
+          <label>Mobile phone<input type="tel" id="new-identity-phone" placeholder="e.g. (555) 123-4567" /></label>
+          <label>VLAN ID<input type="text" id="new-identity-vlan" placeholder="Optional" /></label>
+          <label>Description<input type="text" id="new-identity-description" placeholder="Optional" /></label>
+          <label>Expires<input type="date" id="new-identity-expiration" /></label>
+          <label class="hidden">Extra fields (JSON, optional)
+            <textarea id="new-identity-json" rows="3" spellcheck="false"></textarea>
+          </label>
+          <div class="row-actions">
+            <button type="submit">Create passphrase</button>
+            <button type="button" class="secondary" id="cancel-add-identity">Cancel</button>
+          </div>
+        </form>
+
+        <table class="data-table small" id="identities-table">
+          <colgroup>
+            <col style="width: 5%" />
+            <col style="width: 14%" /><col style="width: 18%" /><col style="width: 6%" />
+            <col style="width: 17%" /><col style="width: 9%" /><col style="width: 31%" />
+          </colgroup>
+          <thead><tr>
+            <th class="checkbox-col"><input type="checkbox" id="residents-select-all" title="Select all" /></th>
+            <th>Name</th><th>Contact</th><th>VLAN</th><th>Devices</th><th>Status</th><th></th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+
+        <details class="manual-associate">
+          <summary class="muted small">Associate an existing identity by ID instead</summary>
+          <div class="row-actions">
+            <input type="text" id="identity-id-input" placeholder="Identity ID" />
+            <button id="associate-identity-btn" class="secondary">Associate</button>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <div id="qr-modal" class="modal-overlay hidden">
+      <div class="modal-card card">
+        <h3>Wi-Fi QR Code</h3>
+        <p id="qr-identity-label" class="muted small"></p>
+        <div id="qr-code-container"></div>
+        <p class="small"><strong>Passphrase:</strong> <span id="qr-passphrase-text"></span></p>
+        <p id="qr-note" class="muted small hidden"></p>
+        <div class="row-actions">
+          <button type="button" class="secondary hidden" id="qr-download-btn">Download</button>
+          <button type="button" class="secondary hidden" id="qr-print-btn">Print move-in sheet</button>
+          <button type="button" class="secondary hidden" id="qr-pdf-btn">Save as PDF</button>
+          <button type="button" class="secondary" id="qr-close-btn">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="client-detail-modal" class="modal-overlay hidden">
+      <div class="modal-card card wide">
+        <h3>Device Details</h3>
+        <dl id="client-detail-body" class="detail-list"></dl>
+        <button type="button" class="secondary" id="client-detail-close-btn">Close</button>
+      </div>
+    </div>
+
+    <div id="import-csv-modal" class="modal-overlay hidden">
+      <div class="modal-card card wide">
+        <h3>Import Units from CSV</h3>
+        <p class="muted small">
+          Columns: <code>name</code> (required), <code>resident_name</code> (required),
+          <code>resident_email</code>, <code>resident_phone</code> (10-digit US number, no country code needed),
+          <code>category</code> (UNIT or CONFERENCEROOM, default UNIT), <code>pms_unit_id</code>.
+          Optional Wi-Fi columns: <code>vlan</code>, <code>description</code>, <code>passphrase</code> (owner),
+          and <code>guest_vlan</code>, <code>guest_passphrase</code> (guest, only applies if this property has
+          guest Wi-Fi configured). Leave a passphrase column blank to set one later from the unit's page instead.
+          First row must be the header.
+        </p>
+        <button type="button" class="link-btn" id="download-csv-template-btn">Download CSV template</button>
+        <label>CSV file<input type="file" id="import-csv-file" accept=".csv,text/csv" /></label>
+        <p id="import-csv-error" class="error hidden"></p>
+        <div id="import-csv-preview" class="hidden">
+          <p id="import-csv-preview-summary" class="small"></p>
+          <table class="data-table small" id="import-csv-preview-table">
+            <thead><tr><th>Row</th><th>Name</th><th>Category</th><th>Resident</th><th>Contact</th><th>Wi-Fi</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div id="import-csv-progress" class="hidden">
+          <p id="import-csv-progress-text" class="small"></p>
+          <dl id="import-csv-results" class="detail-list"></dl>
+        </div>
+        <div class="row-actions">
+          <button type="button" id="import-csv-start-btn" class="hidden">Start import</button>
+          <button type="button" class="secondary" id="import-csv-close-btn">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADD UNIT -->
+    <section id="tab-add-unit" class="tab-panel hidden">
+      <div class="panel-header">
+        <button class="link-btn" id="cancel-add-unit">&larr; Back to units</button>
+      </div>
+      <h2 id="add-unit-title">Add a Property Unit</h2>
+      <form id="add-unit-form" class="card">
+        <label id="new-unit-name-label">Unit name / number *<input type="text" id="new-unit-name" required /></label>
+        <label id="new-unit-resident-name-label">Resident name *<input type="text" id="new-unit-resident-name" required /></label>
+        <label>Resident email<input type="email" id="new-unit-resident-email" /></label>
+        <label>Resident mobile phone<input type="tel" id="new-unit-resident-phone" placeholder="e.g. (555) 123-4567" /></label>
+        <label>PMS unit ID<input type="text" id="new-unit-pms-id" placeholder="Optional — your property-management-system's own unit ID, if you track one" /></label>
+
+        <label class="venues-field-title">Wi-Fi (optional)</label>
+        <label>VLAN<input type="number" id="new-unit-vlan" min="1" max="4094" placeholder="Optional" /></label>
+        <label>Description<input type="text" id="new-unit-description" placeholder="Optional" /></label>
+        <label>Wi-Fi passphrase<input type="text" id="new-unit-passphrase" placeholder="Leave blank to set one later from the unit's page" /></label>
+        <p class="muted small">Wi-Fi details finish applying in the background a few seconds after the unit is created (RUCKUS processes unit creation asynchronously).</p>
+
+        <label class="venues-field-title">Guest Wi-Fi (optional)</label>
+        <label>Guest VLAN<input type="number" id="new-unit-guest-vlan" min="1" max="4094" placeholder="Optional" /></label>
+        <label>Guest Wi-Fi passphrase<input type="text" id="new-unit-guest-passphrase" placeholder="Optional" /></label>
+        <p class="muted small">Only applies if this property has guest Wi-Fi configured — otherwise these are safely ignored.</p>
+
+        <p id="add-unit-error" class="error hidden"></p>
+        <button type="submit">Create unit</button>
+      </form>
+    </section>
+
+    <!-- STAFF TAB (admin only) -->
+    <section id="tab-users" class="tab-panel hidden">
+      <div class="panel-header">
+        <h2>Staff Accounts</h2>
+        <div class="spacer"></div>
+        <button id="add-user-btn">+ Add Staff Account</button>
+      </div>
+      <table class="data-table" id="users-table">
+        <thead><tr><th>Username</th><th>Role</th><th>Properties</th><th>Created</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+
+      <div id="add-user-card" class="card hidden">
+        <h3>New staff account</h3>
+        <form id="add-user-form">
+          <label>Username<input type="text" id="new-user-username" required /></label>
+          <label>Temporary password<input type="password" id="new-user-password" required minlength="8" /></label>
+          <label>Role
+            <select id="new-user-role">
+              <option value="frontdesk">Front desk</option>
+              <option value="admin">Property manager (admin)</option>
+            </select>
+          </label>
+          <div id="new-user-venues-field">
+            <label class="venues-field-title">Properties this account can access</label>
+            <div id="new-user-venues-list" class="checkbox-list"></div>
+            <p class="muted small">Front desk accounts only see and manage the properties checked here — other properties won't appear anywhere in the app for them. Property managers (admin) always have access to every property.</p>
+          </div>
+          <p id="add-user-error" class="error hidden"></p>
+          <div class="row-actions">
+            <button type="submit">Create account</button>
+            <button type="button" class="secondary" id="cancel-add-user">Cancel</button>
+          </div>
+        </form>
+      </div>
+
+      <div id="edit-user-venues-card" class="card hidden">
+        <h3>Property access for <span id="edit-user-venues-username"></span></h3>
+        <div id="edit-user-venues-list" class="checkbox-list"></div>
+        <p id="edit-user-venues-error" class="error hidden"></p>
+        <div class="row-actions">
+          <button type="button" id="save-user-venues-btn">Save</button>
+          <button type="button" class="secondary" id="cancel-edit-user-venues">Cancel</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- AUDIT LOG TAB (admin only) -->
+    <section id="tab-audit" class="tab-panel hidden">
+      <div class="panel-header">
+        <h2>Audit Log</h2>
+        <div class="spacer"></div>
+        <button type="button" class="secondary" id="audit-export-btn">Export CSV</button>
+        <button type="button" class="secondary" id="audit-refresh-btn">Refresh</button>
+      </div>
+      <p class="muted small">Every account and RUCKUS-affecting action taken in this app, most recent first (last 1000 entries).</p>
+      <div class="row-actions">
+        <input type="search" id="audit-search" placeholder="Search by user, action, or detail..." />
+        <select id="audit-action-filter">
+          <option value="">All actions</option>
+        </select>
+      </div>
+      <p id="audit-error" class="error hidden"></p>
+      <table class="data-table small" id="audit-table">
+        <thead><tr><th>Time</th><th>User</th><th>Action</th><th>Detail</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <div id="audit-detail-modal" class="modal-overlay hidden">
+      <div class="modal-card card wide">
+        <h3>Audit Entry</h3>
+        <dl class="detail-list">
+          <dt>Time</dt><dd id="audit-detail-time"></dd>
+          <dt>User</dt><dd id="audit-detail-user"></dd>
+          <dt>Action</dt><dd id="audit-detail-action"></dd>
+        </dl>
+        <pre id="audit-detail-json" class="audit-json"></pre>
+        <button type="button" class="secondary" id="audit-detail-close-btn">Close</button>
+      </div>
+    </div>
+
+    <!-- SETTINGS TAB -->
+    <section id="tab-settings" class="tab-panel hidden">
+      <h2>Settings</h2>
+      <div class="card admin-only">
+        <h3>RUCKUS One API connection</h3>
+        <p class="muted small">From RUCKUS One: Administration &rarr; Account Management &rarr; Settings, create an Application Token for your tenant.</p>
+        <label>Tenant ID<input type="text" id="ruckus-tenant-id" /></label>
+        <label>Client ID<input type="text" id="ruckus-client-id" /></label>
+        <label>Client Secret <span id="ruckus-secret-status" class="muted small"></span>
+          <input type="password" id="ruckus-client-secret" placeholder="Leave blank to keep the current secret" />
+        </label>
+        <label>OAuth base URL<input type="text" id="ruckus-oauth-url" /></label>
+        <label>API base URL<input type="text" id="ruckus-api-url" /></label>
+        <p id="ruckus-config-error" class="error hidden"></p>
+        <p id="ruckus-config-ok" class="ok hidden"></p>
+        <button id="save-ruckus-config-btn">Save connection settings</button>
+      </div>
+      <div class="card admin-only">
+        <div class="panel-header">
+          <h3>Properties</h3>
+          <div class="spacer"></div>
+          <button type="button" id="add-venue-btn">+ Add Property</button>
+        </div>
+        <p id="settings-api-status" class="muted small"></p>
+        <table class="data-table small" id="venues-table">
+          <thead><tr><th>Property</th><th>DPSK Pool</th><th>Wi-Fi network</th><th>Status</th><th></th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <p id="venues-empty" class="muted small hidden">No properties added yet. Click "+ Add Property" to connect one.</p>
+        <p id="settings-error" class="error hidden"></p>
+        <p id="settings-ok" class="ok hidden"></p>
+
+        <form id="venue-form" class="hidden">
+          <h4 id="venue-form-title">Add a Property</h4>
+          <div class="row-actions">
+            <button type="button" id="refresh-ruckus-lists-btn" class="secondary">Load from RUCKUS One</button>
+          </div>
+          <label id="venue-picker-label">Venue
+            <select id="venue-id-input"></select>
+          </label>
+          <p id="venue-editing-name" class="muted small hidden"></p>
+          <label>Property name<input type="text" id="venue-name-input" /></label>
+          <label>DPSK Pool
+            <select id="dpsk-pool-id-input"></select>
+          </label>
+          <p class="muted small">Needed to add residents / generate passphrases. The pool linked to this venue's Identity Group is marked "recommended".</p>
+          <label>Wi-Fi network (SSID)
+            <select id="network-ssid-input"></select>
+          </label>
+          <p class="muted small">Used only to build the Wi-Fi QR code shown to residents.</p>
+          <p id="venue-form-error" class="error hidden"></p>
+          <div class="row-actions">
+            <button type="submit" id="save-venue-btn">Add property</button>
+            <button type="button" class="secondary" id="cancel-venue-form-btn">Cancel</button>
+          </div>
+        </form>
+      </div>
+      <div class="card admin-only">
+        <h3>Appearance</h3>
+        <p class="muted small">Customize the app's name, logo and colors for this install.</p>
+        <label>App name<input type="text" id="brand-name-input" placeholder="DwellLink" /></label>
+        <label>Logo
+          <input type="file" id="brand-logo-input" accept="image/png,image/jpeg,image/svg+xml,image/webp" />
+        </label>
+        <div class="row-actions">
+          <img id="brand-logo-preview" class="hidden" alt="Logo preview" />
+          <button type="button" id="brand-logo-clear-btn" class="secondary small hidden">Remove logo</button>
+        </div>
+        <label>Primary color
+          <input type="color" id="brand-primary-input" />
+        </label>
+        <label>Accent color
+          <input type="color" id="brand-accent-input" />
+        </label>
+        <label>Login screen message (optional)
+          <textarea id="brand-login-message-input" class="prose" rows="3" maxlength="500" placeholder="e.g. Building office closed Dec 25 - Jan 1."></textarea>
+        </label>
+        <p class="muted small">Shown to staff below the logo on the sign-in screen — not sent to residents. Up to 500 characters.</p>
+        <p id="branding-error" class="error hidden"></p>
+        <p id="branding-ok" class="ok hidden"></p>
+        <div class="row-actions">
+          <button type="button" id="save-branding-btn">Save appearance</button>
+          <button type="button" id="reset-branding-btn" class="secondary">Reset to default</button>
+        </div>
+      </div>
+      <div class="card admin-only">
+        <h3>Backup &amp; Restore</h3>
+        <p class="muted small">Exports this install's settings — RUCKUS connection, venue/DPSK/network selections, and appearance — as a JSON file.</p>
+        <p class="muted small"><strong>The backup file contains your RUCKUS API client secret in plain text.</strong> Store it somewhere secure, like a password manager, not a shared folder.</p>
+        <button type="button" id="export-config-btn" class="secondary">Export config backup</button>
+        <label>Restore from backup file<input type="file" id="import-config-file" accept=".json,application/json" /></label>
+        <p id="backup-error" class="error hidden"></p>
+        <p id="backup-ok" class="ok hidden"></p>
+      </div>
+      <div class="card admin-only">
+        <h3>Security</h3>
+        <label>Auto sign-out after inactivity (minutes)
+          <input type="number" id="idle-timeout-input" min="0" max="480" step="1" />
+        </label>
+        <p class="muted small">Applies to every account on this install, including front desk. Use 0 to disable.</p>
+        <p id="security-error" class="error hidden"></p>
+        <p id="security-ok" class="ok hidden"></p>
+        <button type="button" id="save-security-btn">Save</button>
+      </div>
+      <div class="card admin-only">
+        <h3>Software Updates</h3>
+        <p class="muted small" id="update-version-text">Version —</p>
+        <p id="update-status" class="muted small"></p>
+        <div class="row-actions">
+          <button type="button" class="secondary" id="check-updates-btn">Check for updates</button>
+          <button type="button" class="hidden" id="download-update-btn">Download update</button>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Change your password</h3>
+        <form id="change-password-form">
+          <label>Current password<input type="password" id="cp-current" required /></label>
+          <label>New password<input type="password" id="cp-new" required minlength="8" /></label>
+          <p id="cp-error" class="error hidden"></p>
+          <p id="cp-ok" class="ok hidden"></p>
+          <button type="submit">Update password</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- HELP TAB -->
+    <section id="tab-help" class="tab-panel hidden">
+      <div class="panel-header">
+        <h2>Help &amp; User Guide</h2>
+      </div>
+      <div class="card help-card">
+        <img id="help-logo" class="help-logo" alt="" />
+        <p id="help-loading" class="muted small">Loading…</p>
+        <p id="help-error" class="error hidden"></p>
+        <div id="help-content" class="markdown-body"></div>
+      </div>
+    </section>
+  </main>
+  </div>
+</div>
+
+<!-- Populated right before window.print() (renderer/js/app.js's
+     populatePrintSheet()) and hidden the rest of the time — CSS in
+     style.css isolates this as the only visible content during printing.
+     Must be a direct child of <body>: the @media print rule hides
+     `body > *:not(#print-wifi-sheet)`, so nesting this inside #app-view
+     would hide it too, since a hidden ancestor overrides a visible child.
+     Holds one or more .print-sheet-page children (one per unit for a bulk
+     print/PDF from the Units tab's multi-select; one for a single
+     resident's QR modal), each printing on its own page. -->
+<div id="print-wifi-sheet"></div>
+
+<div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+<div id="search-modal" class="modal-overlay hidden">
+  <div class="modal-card card search-card">
+    <input type="search" id="search-input" placeholder="Search units and residents by name, email, phone, or ID..." autocomplete="off" />
+    <div id="search-results" class="search-results"></div>
+    <p class="muted small">Press <kbd>Esc</kbd> to close.</p>
+  </div>
+</div>
+
+<div id="whats-new-modal" class="modal-overlay hidden">
+  <div class="modal-card card wide">
+    <h3>What's new in <span id="whats-new-version"></span></h3>
+    <div id="whats-new-body" class="markdown-body"></div>
+    <div class="row-actions">
+      <button type="button" id="whats-new-close-btn">Got it</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/qrcode.js"></script>
+<script src="js/marked.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

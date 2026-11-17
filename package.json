@@ -1,0 +1,89 @@
+{
+  "name": "dwelllink",
+  "productName": "DwellLink",
+  "version": "1.1.10",
+  "description": "DwellLink — Resident Connectivity Management, powered by RUCKUS One. Standalone desktop app for front desk / property manager staff to create and manage property units in RUCKUS One.",
+  "main": "main.js",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "postinstall": "electron-rebuild -f -w better-sqlite3 && node scripts/fix-electron-gatekeeper.js",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "author": "Terry Henry",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^11.3.0",
+    "electron-updater": "^6.8.9"
+  },
+  "devDependencies": {
+    "@electron/rebuild": "^3.6.0",
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.terryhenry.dwelllink",
+    "productName": "DwellLink",
+    "files": [
+      "main.js",
+      "preload.js",
+      "lib/**/*",
+      "renderer/**/*",
+      "USER_GUIDE.md",
+      "package.json"
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "afterSign": "scripts/afterSign.js",
+    "publish": {
+      "provider": "github",
+      "owner": "TerryHenry",
+      "repo": "dwelllink"
+    },
+    "asarUnpack": [
+      "**/*.node"
+    ],
+    "mac": {
+      "icon": "build/icon.icns",
+      "category": "public.app-category.utilities",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "arm64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "arm64"
+          ]
+        }
+      ],
+      "hardenedRuntime": false,
+      "gatekeeperAssess": false
+    },
+    "win": {
+      "icon": "build/icon.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  },
+  "allowScripts": {
+    "electron@31.7.7": true,
+    "better-sqlite3@11.10.0": true
+  }
+}

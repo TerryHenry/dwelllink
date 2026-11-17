@@ -13,9 +13,11 @@ without touching the RUCKUS One admin console directly.
 > supported by RUCKUS**. It is provided with **no guarantee or warranty of
 > any kind, express or implied**. See [License](#license) below.
 
-This repository hosts the **built app and documentation only** — it's how
-DwellLink is distributed and how the app checks for updates. The source
-code isn't published here.
+This repository hosts the **built app (as Releases), the documentation, and
+the source code**. Releases are how DwellLink is distributed and how the app
+checks for updates. The source is published for transparency and review only
+— it is not licensed for reuse (see [License](#license)). Building it
+yourself is covered in [DEVELOPMENT.md](DEVELOPMENT.md).
 
 ## Features
 
@@ -79,6 +81,8 @@ internally-distributed tool:
 
 - [User Guide](USER_GUIDE.md) — day-to-day usage for front desk and
   property manager staff (also available as a [PDF](DwellLink-User-Guide.pdf)).
+- [Development notes](DEVELOPMENT.md) — building from source, and notes on
+  how the app talks to RUCKUS One.
 
 ## Updates
 
