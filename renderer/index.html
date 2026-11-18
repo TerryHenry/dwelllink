@@ -483,11 +483,17 @@
       <h2>Settings</h2>
       <div class="card admin-only">
         <h3>RUCKUS One API connection</h3>
-        <p class="muted small">From RUCKUS One: Administration &rarr; Account Management &rarr; Settings, create an Application Token for your tenant. <strong>MSP accounts:</strong> create the token inside the end customer's account (open that customer from your MSP portal) and use that customer's Tenant ID here.</p>
+        <div class="muted small">
+          <p>Connect DwellLink to <strong>one RUCKUS One account</strong>. To manage a customer account (for example, as an MSP), do this inside <em>that customer's</em> account:</p>
+          <ol>
+            <li>Sign in to RUCKUS One and open the account you want DwellLink to manage. MSPs: open the customer from your MSP portal.</li>
+            <li>Go to <strong>Administration &rarr; Account Management &rarr; Settings</strong>.</li>
+            <li>Under Application Tokens, click <strong>Add Application Token</strong> and choose a scope that can manage venues, DPSK and properties (for example Prime Admin or Administrator).</li>
+            <li>Copy the <strong>Client ID</strong> and <strong>Client Secret</strong> into the fields below, and enter <em>that same account's</em> <strong>Tenant ID</strong>. The Tenant ID is the 32-character code in the RUCKUS One address bar while you're in that account: <code>ruckus.cloud/<strong>&lt;Tenant ID&gt;</strong>/t/dashboard</code>.</li>
+          </ol>
+          <p>A token only works for the account it was created in, and DwellLink connects to one account at a time.</p>
+        </div>
         <label>Tenant ID<input type="text" id="ruckus-tenant-id" /></label>
-        <label>Advanced: act-as customer tenant ID <span class="muted small">(optional &mdash; leave blank unless your token was created in your MSP's own account)</span>
-          <input type="text" id="ruckus-managed-tenant-id" placeholder="Leave blank for most setups" />
-        </label>
         <label>Client ID<input type="text" id="ruckus-client-id" /></label>
         <label>Client Secret <span id="ruckus-secret-status" class="muted small"></span>
           <input type="password" id="ruckus-client-secret" placeholder="Leave blank to keep the current secret" />

@@ -1,7 +1,7 @@
 {
   "name": "dwelllink",
   "productName": "DwellLink",
-  "version": "1.1.13",
+  "version": "1.1.14",
   "description": "DwellLink — Resident Connectivity Management, powered by RUCKUS One. Standalone desktop app for front desk / property manager staff to create and manage property units in RUCKUS One.",
   "main": "main.js",
   "private": true,

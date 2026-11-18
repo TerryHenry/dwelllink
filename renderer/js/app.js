@@ -2847,7 +2847,6 @@ async function loadSettings() {
       ? 'RUCKUS One API is configured.'
       : 'RUCKUS One API credentials are not configured yet — set them above.';
     $('#ruckus-tenant-id').value = ruckus.tenantId || '';
-    $('#ruckus-managed-tenant-id').value = ruckus.managedTenantId || '';
     $('#ruckus-client-id').value = ruckus.clientId || '';
     $('#ruckus-oauth-url').value = ruckus.oauthBaseUrl || '';
     $('#ruckus-api-url').value = ruckus.apiBaseUrl || '';
@@ -3052,7 +3051,6 @@ $('#save-ruckus-config-btn').addEventListener('click', async () => {
   try {
     await window.api.settings.setRuckusConfig({
       tenantId: $('#ruckus-tenant-id').value.trim(),
-      managedTenantId: $('#ruckus-managed-tenant-id').value.trim(),
       clientId: $('#ruckus-client-id').value.trim(),
       clientSecret: $('#ruckus-client-secret').value,
       oauthBaseUrl: $('#ruckus-oauth-url').value.trim(),

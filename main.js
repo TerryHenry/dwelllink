@@ -269,7 +269,6 @@ app.whenReady().then(async () => {
       apiConfigured: settingsStore.isRuckusConfigured(),
       ruckus: {
         tenantId: ruckus.tenantId,
-        managedTenantId: ruckus.managedTenantId,
         clientId: ruckus.clientId,
         oauthBaseUrl: ruckus.oauthBaseUrl,
         apiBaseUrl: ruckus.apiBaseUrl,
