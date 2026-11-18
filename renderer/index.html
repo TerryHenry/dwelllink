@@ -483,8 +483,11 @@
       <h2>Settings</h2>
       <div class="card admin-only">
         <h3>RUCKUS One API connection</h3>
-        <p class="muted small">From RUCKUS One: Administration &rarr; Account Management &rarr; Settings, create an Application Token for your tenant.</p>
+        <p class="muted small">From RUCKUS One: Administration &rarr; Account Management &rarr; Settings, create an Application Token for your tenant. <strong>MSP accounts:</strong> create the token inside the end customer's account (open that customer from your MSP portal) and use that customer's Tenant ID here.</p>
         <label>Tenant ID<input type="text" id="ruckus-tenant-id" /></label>
+        <label>Managed customer tenant ID <span class="muted small">(optional &mdash; only if your token was created in your MSP's own account; leave blank otherwise)</span>
+          <input type="text" id="ruckus-managed-tenant-id" placeholder="End customer's tenant ID" />
+        </label>
         <label>Client ID<input type="text" id="ruckus-client-id" /></label>
         <label>Client Secret <span id="ruckus-secret-status" class="muted small"></span>
           <input type="password" id="ruckus-client-secret" placeholder="Leave blank to keep the current secret" />
